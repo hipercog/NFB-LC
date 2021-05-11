@@ -197,9 +197,14 @@ getTrialCount <- function(df, id = TRUE)
 getTrialsMCI <- function(x, byvar, jcol)
 {
   require(data.table)
-  fM <- setDT(x)[, lapply(.SD, mean), by=byvar, .SDcols=jcol]
+  fM <- setDT(x)[, lapply(.SD, mean, na.rm = TRUE), by=byvar, .SDcols=jcol]
   fM <- fM[order(fM[,1]),]
-  fCI <- setDT(x)[, bootin(.SD, varname = jcol), by=byvar]
+  fCI <- fM
+  tryCatch(
+    fCI <- setDT(x)[, bootin(.SD, varname = jcol), by=byvar],
+    error = function() print("Returning mean as CI"),
+    finally = print("CI calculated")
+  )
   fCI <- fCI[order(fCI[,1]),]
   list(M=fM, CI=fCI)
 }

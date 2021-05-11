@@ -4,7 +4,7 @@ library(ggplot2)
 library(viridis)
 library(hrbrthemes)
 
-df <- read.csv('data/table1.csv', sep = "\t")
+df <- read.csv(file.path('data', 'ctsem_paper', 'table1.csv'), sep = "\t")
 df$Patient <- as.factor(df$Patient)
 df$Plateau <- as.factor(df$Quadratic.sign > 0)
 df$status.regime <- with(df, Status:Regime)

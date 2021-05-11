@@ -82,10 +82,10 @@ plot_3_meanCI <- function(x1s, ml1, ci1,
 
 
 # Plot four means and their CIs
-plot_4_meanCI <- function(x1s, ml1, ci1, 
-                          x2s, ml2, ci2, 
-                          x3s, ml3, ci3, 
-                          x4s, ml4, ci4, 
+plot_4_meanCI <- function(x1s, ml1, ci1,
+                          x2s, ml2, ci2,
+                          x3s, ml3, ci3,
+                          x4s, ml4, ci4,
                           xlabel, ylabel, lgdstr, colgrp, SMTH = FALSE, smthk = 3)
 {
   if(SMTH){
@@ -93,41 +93,37 @@ plot_4_meanCI <- function(x1s, ml1, ci1,
     ml2 <- runmed(ml2, k = smthk)
     ml3 <- runmed(ml3, k = smthk)
     ml4 <- runmed(ml4, k = smthk)
-    
+
     ci1$V4 <- runmed(ci1$V4, k = smthk)
     ci1$V5 <- runmed(ci1$V5, k = smthk)
-    
+
     ci2$V4 <- runmed(ci2$V4, k = smthk)
     ci2$V5 <- runmed(ci2$V5, k = smthk)
-    
+
     ci3$V4 <- runmed(ci3$V4, k = smthk)
     ci3$V5 <- runmed(ci3$V5, k = smthk)
-    
+
     ci4$V4 <- runmed(ci4$V4, k = smthk)
     ci4$V5 <- runmed(ci4$V5, k = smthk)
   }
   xmarks <- unique(c(x1s, x2s, x3s, x4s))
   plot(range(xmarks),
-       range(c(ci1$V4, ci1$V5, ci2$V4, ci2$V5, ci3$V4, ci3$V5, ci4$V4, ci4$V5)), 
+       range(c(ci1$V4, ci1$V5, ci2$V4, ci2$V5, ci3$V4, ci3$V5, ci4$V4, ci4$V5)),
        type="n", xaxt="n", xlab=xlabel, ylab=ylabel)
   axis(1, at=xmarks)
-  
+
   polygon(c(x1s, rev(x1s)), c(ci1$V5, rev(ci1$V4)), col=colgrp[2], border=NA)
   lines(x1s, ml1, type="l", lwd=2, col=colgrp[1])
-  
+
   polygon(c(x2s, rev(x2s)), c(ci2$V5, rev(ci2$V4)), col=colgrp[4], border=NA)
   lines(x2s, ml2, type="l", lwd=2, col=colgrp[3])
-  
-  # with(ci3, lines(x3s, V4, type="l", lwd=1, col=colgrp[6]))
-  # with(ci3, lines(x3s, V5, type="l", lwd=1, col=colgrp[6]))
+
   polygon(c(x3s, rev(x3s)), c(ci3$V5, rev(ci3$V4)), col=colgrp[6], border=NA)
   lines(x3s, ml3, type="l", lwd=2, col=colgrp[5])
-  
-  # with(ci4, lines(x4s, V4, type="l", lwd=1, col=colgrp[8]))
-  # with(ci4, lines(x4s, V5, type="l", lwd=1, col=colgrp[8]))
+
   polygon(c(x4s, rev(x4s)), c(ci4$V5, rev(ci4$V4)), col=colgrp[8], border=NA)
   lines(x4s, ml4, type="l", lwd=2, col=colgrp[7])
-  
+
   legend("topleft", inset=c(0.05,0.05), y.intersp=0.5, cex=1, bty="n",
          legend=lgdstr, lty=1, lwd=2, col=colgrp[c(1,3,5,7)])
 }

@@ -46,7 +46,9 @@ bootstrapCIs <- function( df, varname, runs ){
   require( boot )
   set.seed(42)
   boot.fun <- function( x, ind ){
-    c("mean" = mean(x[ind]), "median" = median(x[ind]), "var" = var(x[ind]))    
+    c("mean" = mean(x[ind], na.rm = TRUE), 
+      "median" = median(x[ind], na.rm = TRUE), 
+      "var" = var(x[ind], na.rm = TRUE))
   }
   
   if (nrow(df) > 1){
