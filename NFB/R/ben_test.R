@@ -4,14 +4,29 @@ library(here)
 
 datpth <- file.path(here(), "data")
 
+#### TABLE 1 ----
+tab <- read.csv(file.path(datpth, 'ctsem_paper', 'table1.csv'))
+
+rgm_age_aov <- aov(Age ~ Regime, tab)
+summary(rgm_age_aov)
+TukeyHSD(rgm_age_aov)
+
+lrn_age_aov <- aov(Age ~ Status, tab)
+summary(lrn_age_aov)
+TukeyHSD(lrn_age_aov)
+
+#### NFB OUTCOMES ----
 nfb <- read_excel(file.path(datpth, "NFBTrainingMasterDatasheet_2013-08-21.xlsx"), sheet = "TOVA_diff")
 
 df <- nfb %>% 
   dplyr::select(c(1:51, ends_with('T'))) %>% 
-  filter(!is.na(TOVA_SESNUM)) %>%
-  mutate(ASRS_diff = post_ASRS_total - pre_ASRS_total, 
-         ASRSi_diff = post_ASRS_inattention_score - pre_ASRS_inattention_score, 
-         ASRSh_diff = post_ASRS_hyperactivity_impulsivity_score - pre_ASRS_hyperactivity_impulsivity_score)
+  filter(!is.na(TOVA_SESNUM)) %>% # this filters out the dropouts
+  mutate(ASRS_diff = case_when(Learner == "PWL" ~ post_ASRS_total - pre_ASRS_total, 
+                               Learner == "Learner" | Learner == "Non-Learner" ~ s30_ASRS_total - pre_ASRS_total), 
+         ASRSi_diff = case_when(Learner == "PWL" ~ post_ASRS_inattention_score - pre_ASRS_inattention_score, 
+                                Learner == "Learner" | Learner == "Non-Learner" ~ s30_ASRS_inattention_score - pre_ASRS_inattention_score), 
+         ASRSh_diff = case_when(Learner == "PWL" ~ post_ASRS_hyperactivity_impulsivity_score - pre_ASRS_hyperactivity_impulsivity_score,
+                                Learner == "Learner" | Learner == "Non-Learner" ~ s30_ASRS_hyperactivity_impulsivity_score - pre_ASRS_hyperactivity_impulsivity_score))
 
 #### NON-STANDARDISED TOVA VARS ----
 dpaov <- aov(DPRIMET ~ Learner, df)
